@@ -17,7 +17,7 @@ while True:
 
 """    
 while True:
-    filename = "frame" + str(15) + ".jpg"
+    filename = str("resim") + ".jpg"
     #filename="resim.jpg"
     img = cv2.imread(filename)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -42,6 +42,6 @@ while True:
     img[res[:,1],res[:,0]]=[0,0,255]
     img[res[:,3],res[:,2]] = [0,255,0]
 
-    cv2.imwrite("subpixel" + str(15) + ".png",img)
+    cv2.imwrite("subpixel" + str(15) + ".jpg",img)
     num += 1
 

@@ -8,9 +8,12 @@ class ShapeDetector:
     def detect(self, c):
         # şekil adını başlat ve konturu yaklaştır
         shape = "unidentified"
+        print(str(c))
         peri = cv2.arcLength(c, True)
+        print(peri)
         approx = cv2.approxPolyDP(c, 0.04 * peri, True)
-        
+        #approx = cv2.approxPolyDP(c, peri, True)
+
         #şekil düz bir çizgi ise
         if len(approx) == 2:
             shape = "Line"
@@ -40,3 +43,23 @@ class ShapeDetector:
 
         # şeklin adını döndür
         return shape
+
+if __name__ == '__main__':
+    s=ShapeDetector()
+    img = cv2.imread('kare.jpg', 0)
+    ret, thresh = cv2.threshold(img, 127, 255, 0)
+    contours, hierarchy = cv2.findContours(thresh, 1, 2)
+    c = contours[0]
+    M = cv2.moments(c)
+    print(M)
+    s=s.detect(c)
+    print(s)
+    cX = int((M["m10"] / M["m00"]) )
+    cY = int((M["m01"] / M["m00"]) )
+    c = c.astype("int")
+    cv2.drawContours(img, [c], -1, (0, 255, 0), 2)
+    cv2.putText(img, s, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                0.5, (255, 255, 255), 2)
+    cv2.imshow("Image", img)
+    cv2.waitKey(0)
+    #cv2.destroyAllWindows()

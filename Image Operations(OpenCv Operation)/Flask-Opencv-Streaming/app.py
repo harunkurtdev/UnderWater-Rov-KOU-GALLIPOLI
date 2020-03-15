@@ -11,10 +11,19 @@ video = cv2.VideoCapture(0) # opencv kütüpahensi ile
 ''' bu kameradan bilgi almasını istedik'''
 
 'burada sayfaya ilk girildiğinde bize html bilgisini göstermesini istedik'
+i=0
 @app.route('/')
 def index():
     """Video streaming home page."""
-    return render_template('index.html')
+
+    def sayac(i=0):
+        while True:
+        #return render_template('index.html')
+
+            yield str(i)+"sayac \n"
+            i+=1
+    return Response(sayac(), mimetype="text")
+
     'burada template ile index.html bilgisini göstermesini istedik'
 
 
@@ -26,8 +35,8 @@ def gen():
         #resim = display_stabilazatora.DisplayStabilzator(frame)
 
         cv2.imwrite('t.jpg', frame)
-        cv2.imshow("Islenmis Video", frame)
-        cv2.imshow("Normal Video", kare)
+        #cv2.imshow("Islenmis Video", frame)
+        #cv2.imshow("Normal Video", kare)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + open('t.jpg', 'rb').read() + b'\r\n')
 
@@ -49,5 +58,5 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, threaded=True,port=9875)
+    app.run(debug=True, threaded=True,host="0.0.0.0",port=9875)
 

@@ -13,7 +13,7 @@ def midpoint(ptA, ptB):
 
 
 # Değişkenleri tanımlayın
-image = cv2.imread("frame10.jpg", flags=cv2.IMREAD_COLOR)
+image = cv2.imread("resim.jpg", flags=cv2.IMREAD_COLOR)
 scale_percent = 15
 width = int(image.shape[1] * scale_percent / 100)
 height = int(image.shape[0] * scale_percent / 100)
@@ -28,13 +28,13 @@ cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 # Konturları soldan sağa doğru sıralayın ve
-(cnts, _) = contours.sort_contours(cnts)
+#(cnts,boundingBoxes) = contours.sort_contours(cnts)
 pixelsPerMetric = 1.0
 orig = image.copy()
 # konturlar üzerinde ayrı ayrı döngü
 for c in cnts:
 	# Kontur yeterince büyük değilse, yoksay
-	if cv2.contourArea(c) < 1000:
+	if cv2.contourArea(c) < 10:
 		continue
 	# Konturun döndürülmüş sınırlayıcı kutusunu hesaplayın
 	box = cv2.minAreaRect(c)

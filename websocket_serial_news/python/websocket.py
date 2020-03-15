@@ -1,12 +1,28 @@
 import asyncio
 import  websockets
-
+import numpy as np
+listemiz =[]
 async def response(websocket,path):
 
     message=await websocket.recv()
-    print("message : {}".format(message))
-    await websocket.send("Benim mesajım")
+    # message=message.split("-")
+    # for i in message:
+    #     listemiz.append(i.split(":"))
+    #
+    #     print(len(listemiz))
+    # #
+    # # for j in listemiz:
+    # #     print(j[0])
+    # #     j.remove(0)
+    # #     listemiz.append(j)
 
-start_server=websockets.serve(response,"0489ca63-40e7-41f7-b324-d61027b121d5.local",port=80)
+
+
+    print(message)
+
+    #print("message : {}".format(message))
+    #await websocket.send("Benim mesajım")
+
+start_server=websockets.serve(response,"127.0.0.1",port=5553)
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()

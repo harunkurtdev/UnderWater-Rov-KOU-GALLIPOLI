@@ -7,11 +7,11 @@ import serial
 
 brown = (19, 69, 139)
 blue = (255, 255, 0)
-
-port = serial.Serial("COM3"  # com girilmesi gerekli
-                         , baudrate=9600  # baund rate
-                         #,timeout=1# zaman aşım
-                     )
+#
+# port = serial.Serial("COM3"  # com girilmesi gerekli
+#                          , baudrate=9600  # baund rate
+#                          #,timeout=1# zaman aşım
+#                      )
 
 class Display:
     width = 700
@@ -215,16 +215,16 @@ def main():
             port_okunan))  # -"ascii"- format ile ekrana veriyi bastıroyruz aynı zamanda ise
         # decode diyerek parçalama işlemi yapıyoruz...
         """
-        array = []
-        for i in range(4):
-            port_okunan_x = port.readline()[:-2].decode("utf-8") # readline ile veriyi okuyup barçalıyoruz
-
-            array.append(port_okunan_x)
-
-        print("Mpu dan okunan: {}-{}".format(
-            array[0],
-            array[1]))  # format ile ekrana veriyi bastıroyruz aynı zamanda ise
-        # decode diyerek parçalama işlemi yapıyoruz...
+        # array = []
+        # for i in range(4):
+        #     port_okunan_x = port.readline()[:-2].decode("utf-8") # readline ile veriyi okuyup barçalıyoruz
+        #
+        #     array.append(port_okunan_x)
+        #
+        # print("Mpu dan okunan: {}-{}".format(
+        #     array[0],
+        #     array[1]))  # format ile ekrana veriyi bastıroyruz aynı zamanda ise
+        # # decode diyerek parçalama işlemi yapıyoruz...
 
         if k == ord('q'):
             break
@@ -241,23 +241,23 @@ def main():
         if k == ord('m'):
             psi += 18
 
-        try:
-            phi =int(array[0])
-            #theta =int(array[1])
-
-            if(int(array[1])<=360 and int(array[1])>=200):
-                theta=int(array[3])
-            elif(int(array[1])<=160 and int(array[1])>=0):
-                theta=int(array[2])
-            else :
-                theta=0
-            #print(type(theta))
-
-            #phi=0
-        except ValueError:
-            print(array[0],array[1])
-        #phi = int(15)
-        port.cancel_read()
+        # try:
+        #     phi =int(array[0])
+        #     #theta =int(array[1])
+        #
+        #     if(int(array[1])<=360 and int(array[1])>=200):
+        #         theta=int(array[3])
+        #     elif(int(array[1])<=160 and int(array[1])>=0):
+        #         theta=int(array[2])
+        #     else :
+        #         theta=0
+        #     #print(type(theta))
+        #
+        #     #phi=0
+        # except ValueError:
+        #     print(array[0],array[1])
+        # #phi = int(15)
+        # port.cancel_read()
         dis.make_image(phi, theta, psi)
     cv2.destroyAllWindows()
 

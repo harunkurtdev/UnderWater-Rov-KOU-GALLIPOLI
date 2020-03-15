@@ -1,8 +1,9 @@
 # kodu pygame örneğinden toplandı ve sonra değiştirildi
 import serial
 import pygame
+import numpy as np
 #import pygame.base
-import Drive
+#import Drive
 # Arduino için seri bağlantı noktasını tanımlama
 #serArduino = serial.Serial("COM3")
 
@@ -24,7 +25,7 @@ class TextPrint:
         self.y += self.line_height
         
     def reset(self):
-        self.x = 10
+        self.x = 1250
         self.y = 10
         self.line_height = 15
         
@@ -60,6 +61,9 @@ pygame.joystick.init()
 # Yazdırmaya hazır olun
 textPrint = TextPrint()
 
+message_list = np.array([[0,1,2,3],[0,1,2,3,4,5,6,7,8,9,10,11]])
+
+print(message_list)
 # -------- Main Program Loop -----------
 while done==False:
     # ETKİNLİK İŞLEME ADIMI
@@ -107,18 +111,23 @@ while done==False:
         
         for i in range( axes ):
             axis = joystick.get_axis( i )
+            message_list[0][i]=axis
             textPrint.print(screen, "Eksen {} değeri: {:>6.2f}".format(i, axis) )
         textPrint.unindent()
-            
+
+
         buttons = joystick.get_numbuttons()
         textPrint.print(screen, "Düğme sayısı: {}".format(buttons) )
         textPrint.indent()
 
         for i in range( buttons ):
             button = joystick.get_button( i )
+            message_list[1][i]=button
             textPrint.print(screen, "Button {:>2} value: {}".format(i,button) )
         textPrint.unindent()
-            
+
+        print(message_list)
+
         # Şapka anahtarı. Yön için ya hep ya hiç, joystick gibi değil.
         # Değer bir dizide geri gelir.
         hats = joystick.get_numhats()

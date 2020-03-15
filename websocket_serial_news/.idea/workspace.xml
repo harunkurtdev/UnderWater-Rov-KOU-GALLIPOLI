@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ff4cda71-b479-433a-878d-232b71522aa6" name="Default Changelist" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="ff4cda71-b479-433a-878d-232b71522aa6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/detectshape.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/pygame_camera.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Rover/Controller-PC/controllerjoystick.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/websocket_serial_news.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/UnderWater-Rov-KOU-GALLIPOLI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/UnderWater-Rov-KOU-GALLIPOLI.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Esc Controller/esc_controller.ino" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Image Operations(OpenCv Operation)/Flask-Opencv-Streaming/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Image Operations(OpenCv Operation)/Flask-Opencv-Streaming/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Image Operations(OpenCv Operation)/Flask-Opencv-Streaming/t.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/../Image Operations(OpenCv Operation)/Flask-Opencv-Streaming/t.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Joystick Kontrolleri/controller input test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Joystick Kontrolleri/controller input test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/Object detection-obje-tanıma.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/Object detection-obje-tanıma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/shapedetector-sekildedektoru.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/shapedetector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/sizecalculation-boyut_hesaplma.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/sizecalculation-boyut_hesaplma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/yazidan-resim-okuma.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Kamera_Uzerinden_Nesne_Tespiti-Yazi_Okuma/yazidan-resim-okuma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Mpu-Denge-Ekran/Display_mpu.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Mpu-Denge-Ekran/Display_mpu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gallipoli_rover_controller/lib/desing/layout/mainlayout.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../gallipoli_rover_controller/lib/desing/layout/mainlayout.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gallipoli_rover_controller/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../gallipoli_rover_controller/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gallipoli_rover_controller/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../gallipoli_rover_controller/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/websocket.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/websocket.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/websocket_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/websocket_client.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,18 +38,75 @@
   </component>
   <component name="ProjectId" id="1UlGpra2ygTUrCabVWtZF6GyfyJ" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/python" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.websocket">
+    <configuration name="websocket" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="websocket_serial_news" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python/websocket.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="websocket_client" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="websocket_serial_news" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/python/websocket_client.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <item itemvalue="Python.websocket" />
+        <item itemvalue="Python.websocket_client" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -46,10 +128,38 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1345" height="420" key="GridCell.Tab.0.bottom" timestamp="1584224726956">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="420" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1584224726956" />
+    <state width="1345" height="420" key="GridCell.Tab.0.center" timestamp="1584224726955">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="420" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1584224726955" />
+    <state width="1345" height="420" key="GridCell.Tab.0.left" timestamp="1584224726955">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="420" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1584224726955" />
+    <state width="1345" height="420" key="GridCell.Tab.0.right" timestamp="1584224726956">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="420" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1584224726956" />
+    <state x="188" y="12" key="SettingsEditor" timestamp="1581118432605">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="188" y="12" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1581118432605" />
+    <state x="53" y="187" key="com.intellij.ide.util.TipDialog" timestamp="1584301204385">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="53" y="187" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1584301204380" />
   </component>
 </project>
