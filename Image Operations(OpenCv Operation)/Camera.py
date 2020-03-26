@@ -12,7 +12,7 @@ def getNumCam():
             break
     return num
 
-currCam = 0;
+currCam = 0
 cap = cv2.VideoCapture(currCam)
 cap.set(3,1920)
 cap.set(4,1080)
