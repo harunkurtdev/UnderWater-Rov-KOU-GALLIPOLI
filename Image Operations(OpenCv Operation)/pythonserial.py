@@ -1,31 +1,31 @@
 import serial
 import time
-
+import json
 def pythonSerial():
     # burada portumuzu okuyoruz...
-    port = serial.Serial("COM7"  # com girilmesi gerekli
-                         , baudrate=9600  # baund rate
-                         , timeout=0)  # zaman aşım
+    port = serial.Serial("COM5"  # com girilmesi gerekli
+                         , baudrate=115200  # baund rate
+                         , timeout=0.101
+                         , parity=serial.PARITY_NONE,
+                         bytesize=serial.EIGHTBITS,
+                         stopbits=serial.STOPBITS_ONE
+                         )  # zaman aşım
 
     #port_okunan = port.readline()[:-2]  # readline ile veriyi okuyup barçalıyoruz
     #print("Mpu dan okunan X derecesi : {}".format(port_okunan.decode("ascii")))  # format ile ekrana veriyi bastıroyruz aynı zamanda ise
     # decode diyerek parçalama işlemi yapıyoruz...
 
-    hız = int(input("hız giriniz "))
-
     while True:
-        #hız2=int(input("Hız ne olsun 30 için 2"))
+        if port.readline():
+            if port.readline()!=b'':
+                jsonSerial=json.loads(port.readline().decode("utf-8"))
+                print(jsonSerial["x_eksen"])
 
-
-        port.write(hız)
-
-        print(hız)
+        port.flush()
 
         if 0xFF==ord("q"):
             print("cıkıs yapılıyor")
             break
-
-    #return port_okunan.decode("ascii")
 
 if __name__=="__main__":
     pythonSerial()

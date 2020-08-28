@@ -46,7 +46,7 @@ class ShapeDetector:
 
 if __name__ == '__main__':
     s=ShapeDetector()
-    img = cv2.imread('kare.jpg', 0)
+    img = cv2.imread('circles.png', 0)
     ret, thresh = cv2.threshold(img, 127, 255, 0)
     contours, hierarchy = cv2.findContours(thresh, 1, 2)
     c = contours[0]

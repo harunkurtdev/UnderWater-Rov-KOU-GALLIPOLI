@@ -4,12 +4,16 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/flutter_websockets/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/flutter_websockets/build" />
+      <excludeFolder url="file://$MODULE_DIR$/gallipoli_rov/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/gallipoli_rov/build" />
       <excludeFolder url="file://$MODULE_DIR$/gallipoli_rover_controller/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/gallipoli_rover_controller/build" />
+      <excludeFolder url="file://$MODULE_DIR$/rov_control/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/rov_control/build" />
       <excludeFolder url="file://$MODULE_DIR$/websocket_serial_news/dart/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/websocket_serial_news/dart/build" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7 (Flask-Opencv-Streaming)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.7" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

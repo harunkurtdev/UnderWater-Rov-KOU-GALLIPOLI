@@ -7,10 +7,13 @@ import serial
 
 brown = (19, 69, 139)
 blue = (255, 255, 0)
-#
-# port = serial.Serial("COM3"  # com girilmesi gerekli
-#                          , baudrate=9600  # baund rate
-#                          #,timeout=1# zaman aşım
+
+# port = serial.Serial("COM6"  # com girilmesi gerekli
+#                          , baudrate=115200  # baund rate
+#                          , timeout=0
+#                          , parity=serial.PARITY_NONE,
+#                          bytesize=serial.EIGHTBITS,
+#                          stopbits=serial.STOPBITS_ONE
 #                      )
 
 class Display:
@@ -240,7 +243,7 @@ def main():
             psi -= 18
         if k == ord('m'):
             psi += 18
-
+        #
         # try:
         #     phi =int(array[0])
         #     #theta =int(array[1])
@@ -251,7 +254,7 @@ def main():
         #         theta=int(array[2])
         #     else :
         #         theta=0
-        #     #print(type(theta))
+        #     print(phi)
         #
         #     #phi=0
         # except ValueError:
