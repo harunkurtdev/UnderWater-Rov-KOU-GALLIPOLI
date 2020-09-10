@@ -6,13 +6,13 @@ import serial
 import  time
 from serial_asyncio import create_serial_connection
 
-# port = serial.Serial("COM1"  # com girilmesi gerekli
-#                          , baudrate=115200  # baund rate
-#                          , timeout=0
-#                          ,parity=serial.PARITY_NONE,
-#                          bytesize=serial.EIGHTBITS,
-#                          stopbits=serial.STOPBITS_ONE
-#                      )  # zaman aşım
+port = serial.Serial("COM5"  # com girilmesi gerekli
+                         , baudrate=115200  # baund rate
+                         , timeout=0
+                         ,parity=serial.PARITY_NONE,
+                         bytesize=serial.EIGHTBITS,
+                         stopbits=serial.STOPBITS_ONE
+                     )  # zaman aşım
 
 class RoboSocketCom:
 
@@ -131,18 +131,18 @@ class RoboSocketCom:
                 # print(str(line, 'utf-8'))
                 #
                 # # # port.open()
-                # if port.isOpen():
-                #     try:
-                #         print(direction)
-                #         port.write(str(direction).encode("utf-8"))
-                #         incoming = port.readline().decode("utf-8")
-                #
-                #         print(incoming)
-                #     except Exception as e:
-                #         print(e)
-                #         pass
-                # else:
-                #     print("opening error")
+                if port.isOpen():
+                    try:
+                        print(direction)
+                        port.write(str(direction).encode("utf-8"))
+                        incoming = port.readline().decode("utf-8")
+
+                        print(incoming)
+                    except Exception as e:
+                        print(e)
+                        pass
+                else:
+                    print("opening error")
                 # # port.close()
 
 

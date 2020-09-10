@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>TeknoFest 2020 GalliPoli Rov</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+    .btn
+    {
+      position: relative;
+      margin: auto;
+    }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="container" role="group" style="height: 480px; width 640">
+        <img style="width: 320px; height: 240px;margin-left: 48px;margin-right: 48px;margin-top: 24px;" src="{{ url_for('video_feed') }}"/>
+        <img style="width: 320px; height: 240px;margin-left: 48px;margin-right: 48px;margin-top: 24px;" src="{{ url_for('arm_Cam') }}"/>
+        <img style="width: 320px; height: 240px;margin-left: 48px;margin-right: 48px;margin-top: 24px;" src="{{ url_for('mission_circles') }}"/>
+        <img style="width: 320px; height: 240px;margin-left: 48px;margin-right: 48px;margin-top: 24px;" src="{{ url_for('display_stabilize') }}"/>
+      </div>
+      <h2> Trova Hareketleri</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th><button type="button" class="btn btn-primary m-1">Sol İleri Çapraz</button></th>
+            <th><button type="button" class="btn btn-primary m-1">İleri</button></th>
+            <th><button type="button" class="btn btn-primary m-1">Sağ İleri Çapraz</button></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><button type="button" class="btn btn-warning m-1">Sol Yana Doğru</button></td>
+            <td><button type="button" class="btn btn-warning m-1">Ortada Dön</button></td>
+            <td><button type="button" class="btn btn-warning m-1">Sağ Yana Doğru</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="btn btn-primary m-1">Sol Geri Çapraz</button></td>
+            <td><button type="button" class="btn btn-primary m-1">Geri</button></td>
+            <td><button type="button" class="btn btn-primary m-1">Sağ Geri Çapraz</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br><br>
+
+    <div class="container">
+      <h2> Trova Kol Hareketleri</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><button type="button" class="btn btn-warning m-1">Kol Aç</button></th>
+            <th><button type="button" class="btn btn-warning m-1">Kol Kapat</button></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+            <td><button type="button" class="btn btn-primary m-1">Deneme</button></td>
+            <td><button type="button" class="btn btn-primary m-1">Deneme</button></td>
+          </tr>
+          <tr>
+            <td><button type="button" class="btn btn-warning m-1">Deneme</button></td>
+            <td><button type="button" class="btn btn-warning m-1">Deneme</button></td>
+          </tr> -->
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

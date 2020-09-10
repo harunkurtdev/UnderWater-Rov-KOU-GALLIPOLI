@@ -34,6 +34,6 @@ class camThread(threading.Thread):
 
 
 thread1 = camThread("Camera 1", 0)
-#thread2 = camThread("Camera 2", 0)
+thread2 = camThread("Camera 2", 0)
 thread1.start()
-#thread2.start()
+thread2.start()

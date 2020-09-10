@@ -14,6 +14,7 @@ def getNumCam():
 
 currCam = 0
 cap = cv2.VideoCapture(currCam)
+cam = cv2.VideoCapture(currCam)
 cap.set(3,640)
 cap.set(4,480)
 capNum = 0

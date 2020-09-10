@@ -5,28 +5,46 @@ import numpy as np
 import serial
 import  time
 #
-port = serial.Serial("COM5"  # com girilmesi gerekli
-                         , baudrate=115200  # baund rate
-                         , timeout=0
-                         ,parity=serial.PARITY_NONE,
-                         bytesize=serial.EIGHTBITS,
-                         stopbits=serial.STOPBITS_ONE
-                     )  # zaman aşım
+# port = serial.Serial("COM5"  # com girilmesi gerekli
+#                          , baudrate=115200  # baund rate
+#                          , timeout=0
+#                          ,parity=serial.PARITY_NONE,
+#                          bytesize=serial.EIGHTBITS,
+#                          stopbits=serial.STOPBITS_ONE
+#                      )  # zaman aşım
 
 class RoboSocketCom:
 
-    def __init__(self,serverHost=None,serverPort=None,clientHost=None,clientPort=None):
+    def __init__(self,serverHost=None,serverPort=None,clientHost=None,clientPort=None,serialPort=None):
         "gelen bilgiler atanmakta..."
         self.serverHost=serverHost
         self.serverPort=serverPort
         self.clientHost=clientHost
         self.clientPort=clientPort
+        self.serialPort=serialPort
+        self.robot_working=None
+        self.direction=None
+        self.frontRightSpeed=1100
+        self.frontLeftSpeed=1100
+        self.backSpeed=1500
+        self.goLeftSpeed=1500
+        self.goRightSpeed=1500
+        self.turnRightSpeed=1500
+        self.turnLeftSpeed=1500
+        self.gripper_arm=0
+        self.gripperArmLevel=0
+        self.robotHeightSpeed=1500
+        self.robotHeight=0
+        self.cam_x_position=1500
+        self.cam_y_position=1500
+        self.readJson=""
+
 
 
         "socket bağlantılarını başlat"
-        self.socketRun()
+        # self.socketRun()
 
-    def socketRun(self):
+    async def socketRun(self):
          
         """asyncio ile fonksiyonu başlatılmasını isteyerek burada fonksiyonu çağrıyoruz 
         ve bölyelikle rahatlıkla socket bağlantımızın başlatılmasını sağlıyoruz ve istenilen bağlantı yapılmış
@@ -38,13 +56,11 @@ class RoboSocketCom:
         "serverhost ve serverPort dolu ise server başlasın"
         if self.serverHost==None and self.serverPort==None :
             pass
-        else : 
-            asyncio.get_event_loop().run_until_complete(self.startRoboServer())
+        else :
+            return await self.startRoboServer()
+            # asyncio.get_event_loop().run_until_complete(self.startRoboServer())
             "clientHost ve clientPort dolu ise bağlanma işlemi başlasın"
-            # self.loop= asyncio.get_event_loop()
-            # self.coro =create_serial_connection(self.loop, Output, 'COM5', baudrate=115200)
-
-            asyncio.get_event_loop().run_forever()
+            # asyncio.get_event_loop().run_forever()
             
         if self.clientHost==None and self.clientPort==None :
             pass
@@ -53,17 +69,23 @@ class RoboSocketCom:
             pass
             #asyncio.get_event_loop().run_until_complete(self.startRoboServerConnect())
 
-
-
-    def startRoboServer(self,serverHost=None,serverPort=None):
+    async def startRoboServer(self,serverHost=None,serverPort=None):
         "server ın başlatılması gerektiğini dile getiyoruz gelen verileri roboResponse da yakalamamız gerektiğini istoyruz"
         if self.serverHost==None or self.serverPort==None:
             self.serverHost=serverHost
             self.serverPort=serverPort
-
-        self.startserver=websockets.serve(self.roboServer,self.serverHost,self.serverPort)
-        print("server başladı")
+        self.startserver=await websockets.serve(self.roboServer,self.serverHost,self.serverPort)
+        print(f"""
+   |----------------------------------------GALLIPOLI ROV RASPBERRY PI RoboSocketCom ----------------------------------------|
+   |  RoboSocketCom Sunucusu Başlatılıyor -- MikroDenetleyici ile Haberleşmeye Hazırlanıyor...                               |
+   |-------------------------------------------------------------------------------------------------------------------------|
+   |  RoboSocketcom Sunucusunun Portu : {self.serverPort}                                                                                 |
+   |-------------------------------------------------------------------------------------------------------------------------|
+                  """)
         return self.startserver
+
+    def motorSpeedMap(self,x, in_min, in_max, out_min, out_max):
+        return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
     async def roboServer(self,websockets,path):
         """
@@ -76,100 +98,162 @@ class RoboSocketCom:
         send() fonksiyonu ile gelen mesajlara karşılık verebiliriz...
         """
         # await websockets.send("server dan giden mesaj roboServerWebSocket")
-        
+
+
         """gelen mesajları bu fonksiyon içerisinde recv() ile yakalayıp 
         ekrana basabiliriz...
         """
-
         self.message = await websockets.recv()
         "json.loads methodunu kullanmak zorundasın aksi halde hata alırsın"
         value = json.loads(self.message)
 
         try:
-            #print("client ten gelen : ",self.message)
-            direction="0"
+            # print("client ten gelen : ",self.message)
+            self.direction="0"
 
             if value!=None:
-                if(float(value["motor_x_axis"])==-1.0):
-                    direction="1"
-                    #direction="front"
-                    # speed= map(-value["motor_x_axis"],0.0,1.0,0,2000)
-                elif(float(value["motor_x_axis"])==0.999969482421875):
-                    direction="2"
-                    #direction="back"
-                    # speed = map(value["motor_x_axis"], 0.0,0.999969482421875,0, 2000)
+                if(0>float(value["motor_x_axis"])>=-1.0) and value["motor_x_axis"] !=-3.0517578125e-05 and value["motor_x_axis"]!=-0.007843017578125:
+                    self.direction="1"
+                    self.frontRightSpeed=self.motorSpeedMap(-value["motor_x_axis"],0.0,1.0,1100,1900)
+                    self.goLeftSpeed= self.motorSpeedMap(-value["motor_x_axis"],0.0,1.0,1500,1900)
 
-                if (float(value["motor_y_axis"]) ==0.999969482421875):
-                    direction = "4"
-                    # direction="goright"
-                    # speed = map(value["motor_y_axis"], 0.0, 0.999969482421875, 0, 2000)
-                elif (float(value["motor_y_axis"]) ==-1.0):
-                    direction="3"
-                    #direction="goleft"
-                    # speed = map(-value["motor_y_axis"], 0.0, 1.0, 0, 2000)
+                elif(0<float(value["motor_x_axis"])<=0.999969482421875):
+                    self.direction="2"
+                    self.goRightSpeed = self.motorSpeedMap(value["motor_x_axis"], 0.0,0.999969482421875,1500, 1900)
+                    self.frontLeftSpeed = self.motorSpeedMap(value["motor_x_axis"], 0.0,0.999969482421875,1100, 1900)
+
+                if (0<float(value["motor_y_axis"]) <=0.999969482421875):
+                    self.direction="4"
+                    self.backSpeed = self.motorSpeedMap(value["motor_y_axis"], 0.0, 0.999969482421875, 1500, 1100)
+
+                elif (0>float(value["motor_y_axis"]) >=-1.0)and value["motor_y_axis"] !=-3.0517578125e-05 and value["motor_y_axis"] !=-0.007843017578125:
+                    self.direction="3"
+                    self.frontLeftSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1100, 1900)
+                    self.frontRightSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1100, 1900)
+
+                    self.backSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1500, 1900)
+
+                if (0<float(value["cam_y_axis"]) <=0.999969482421875):
+                    self.cam_y_position = self.motorSpeedMap(value["cam_y_axis"], 0.0, 0.999969482421875, 1500, 1100)
+
+                elif (0>float(value["cam_y_axis"]) >=-1.0)and value["cam_y_axis"] !=-3.0517578125e-05 and value["cam_y_axis"]!= -0.007843017578125 :
+                    self.cam_y_position= self.motorSpeedMap(-value["cam_y_axis"], 0.0, 1.0, 1500, 1900)
+
+                if (0<float(value["cam_x_axis"]) <=0.999969482421875):
+                    self.cam_x_position = self.motorSpeedMap(value["cam_x_axis"], 0.0, 0.999969482421875, 1000, 0)
+
+                elif (0>float(value["cam_x_axis"]) >=-1.0)and value["cam_x_axis"] !=-3.0517578125e-05 and value["cam_x_axis"]!= -0.007843017578125:
+                    self.cam_x_position= self.motorSpeedMap(-value["cam_x_axis"], 0.0, 1.0, 1000, 2000)
 
                 if (int(value["robot_arm_x_positive"])> 0):
-                    direction="5"
-                    #direction="turnright"
-                    # speed = 1000
+                    self.direction="5"
+                    self.frontRightSpeed=1200
+                    self.turnLeftSpeed=1400
 
                 if (int(value["robot_arm_x_negative"])> 0):
-                    direction="6"
-                    #direction="turnleft"
-                    # speed = 1000
+                    self.direction="6"
+                    self.frontLeftSpeed=1200
+                    self.turnRightSpeed=1400
 
                 if (int(value["robot_arm_z_negative"])> 0):
-                    direction="7"
-                    #direction="turnleft"
-                    # speed = 1000
+                    if -1001<self.robotHeight<0:
+                        self.robotHeightSpeed = self.motorSpeedMap(self.robotHeight, 0, -1000, 1500, 1100)
+
+                if (int(value["robot_arm_z_positive"])> 0):
+                    if 1001>self.robotHeight>0:
+                        self.robotHeightSpeed=self.motorSpeedMap(self.robotHeight,0,1000,1500,1900)
+
+                if (int(value["clock_right_motor"])> 0):
+                    self.robotHeight=0
+                    self.robotHeightSpeed=1500
 
 
-                print(direction)
+                if (int(value["clock_left_motor"])> 0):
+                    self.cam_y_position = 1500
+                    self.cam_x_position = 1500
 
-                # line = await reader.readline()
-                # print(str(line, 'utf-8'))
-                #
-                # # port.open()
-                if port.isOpen():
-                    try:
-                        print(direction)
-                        port.write(str(direction).encode("utf-8"))
-                        incoming = port.readline().decode("utf-8")
+                if (int(value["robot_arm_y_positive"])> 0):
+                    self.robotHeight+=1
 
-                        print(incoming)
-                    except Exception as e:
-                        print(e)
-                        pass
-                else:
-                    print("opening error")
-                # port.close()
+                if (int(value["robot_arm_y_negative"])> 0):
+                    self.robotHeight-=1
 
-            # try:
-            #
-            #     self.port.write(str(value).encode("utf-8"))
-            #     #print(str(value).encode("utf-8"))
-            #     # array = []
-            #     # for i in range(4):
-            #     #     port_okunan_x = self.port.readline()[:-2].decode("utf-8")  # readline ile veriyi okuyup barçalıyoruz
-            #     #
-            #     #     array.append(port_okunan_x)
-            #     #
-            #     # print("Mpu dan okunan: {}-{}-{}".format(array[0],array[1],array[2]))
-            #
-            #     print(self.port.readlines())
-            # except Exception as exp:
-            #     print("port açılırken sorun oldu ",exp)
-            #print(self.port.read())
+                if (int(value["gripper_negative"])> 0):
+                    self.gripper_arm=0
+                if (int(value["gripper_positive"])> 0):
+                    self.gripper_arm=2000
 
-            
-            
-            await websockets.send("server dan giden mesaj- roboServerWebSocket")
-            
+                writeJson={
+                    "direction":self.direction,
+                    "frontLeftSpeed":self.frontLeftSpeed,
+                    "frontRightSpeed":self.frontRightSpeed,
+                    "backSpeed":self.backSpeed,
+                    "goLeftSpeed":self.goLeftSpeed,
+                    "goRightSpeed":self.goRightSpeed,
+                    "turnRightSpeed":self.turnRightSpeed,
+                    "turnLeftSpeed":self.turnLeftSpeed,
+                    "robotHeightSpeed":self.robotHeightSpeed,
+                    "gripper_arm":self.gripper_arm,
+                    "cam_x_position":self.cam_x_position,
+                    "cam_y_position":self.cam_y_position,
+                }
+                writeJson=json.dumps(writeJson)
+
+                if value["robot_stop"]==1 or value["robot_stop"]==True or self.robot_working==False:
+                    # print("durdu")
+                    self.robot_working=False
+                if value["robot_run"]==1 or value["robot_run"]==True or self.robot_working==True:
+                    # print("çalışıyor")
+                    # print(json.loads(writeJson))
+                    if self.serialPort.isOpen():
+                        try:
+                            self.serialPort.flush()
+                            print(writeJson)
+                            self.serialPort.write(str(writeJson+"\n").encode("utf-8"))
+                            self.readJson = self.serialPort.readline().decode("utf-8")
+                            print("--"+self.readJson+"--")
+                            if self.readJson!=None and self.readJson!="{}" and self.readJson!="":
+                                # print( "gelen veri :---"+ self.readJson +"---bitti")
+                                # sw=json.loads(writeJson)
+                                # print( "yazdırılan veri : ",str(sw["turnLeftSpeed"]))
+                                try:
+                                    # self.readJson=json.loads(self.readJson)
+                                    # print("sola : "+ str(self.readJson["goLeftSpeed"])+ " sağa : "+str(self.readJson["goRightSpeed"]))
+                                    # print(self.readJson)
+                                    # print(self.readJson)
+                                    # await websockets.send(readJson)
+                                    pass
+                                except Exception as exp :
+                                    "hata aldığımız için pass ediyoruz.."
+                                    # print(exp)
+                                    pass
+                            else:
+                                # print("veri okunmuyor")
+                                pass
+                        except Exception as e:
+                            print(e)
+                            pass
+
+                    self.robot_working=True
+
+                self.direction="0"
+                self.frontLeftSpeed=1100
+                self.frontRightSpeed=1100
+                self.backSpeed=1500
+                self.goRightSpeed=1500
+                self.goLeftSpeed=1500
+                self.turnRightSpeed=1500
+                self.turnLeftSpeed=1500
+                self.gripper_arm=0
+
+            await websockets.send(self.readJson)
         except Exception as exp:
             pass
             print("roboServer bölümünde veriler gelirken bir hata oluştu hata kodu : ",exp)
         finally:
-            print(value)
+            # print(value)
+            pass
+
     async def startRoboServerConnect(self,clientHost=None,clientPort=None,sendMessage=None):
         "Server a diğer araçta ki server a bağlanma durumunu buradan ele alarak yapacağız"
         

@@ -176,7 +176,7 @@ if __name__ == '__main__':
     except Exception as exp:
         print("joytcik başlatılırken bir sorun çıktı sorun... : ",exp)
     try:
-        roboSocketCom=RoboSocketCom(clientHost="10.0.0.49",clientPort=5000)
+        roboSocketCom=RoboSocketCom(clientHost="127.0.0.1",clientPort=5000)
         # roboSocketCom=RoboSocketCom(clientHost="192.168.1.52",clientPort=5000)
     except Exception as exp:
         print("sockete bağlanma işlemi başlatılırken bir sorun çıktı sorun... hata kodu : ",exp)

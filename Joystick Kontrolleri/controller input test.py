@@ -1,156 +1,141 @@
-# kodu pygame örneğinden toplandı ve sonra değiştirildi
-import serial
 import pygame
-import numpy as np
-#import pygame.base
-#import Drive
-# Arduino için seri bağlantı noktasını tanımlama
-#serArduino = serial.Serial("COM3")
 
-# Bazı renkleri tanımla
-BLACK    = (   0,   0,   0)
-WHITE    = ( 255, 255, 255)
 
-# Bu, ekrana yazdırmamıza yardımcı olacak basit bir sınıf
-# Oyun çubuklarıyla hiçbir ilgisi yok, sadece
-# bilgi.
-class TextPrint:
+# Define some colors.
+BLACK = pygame.Color('black')
+WHITE = pygame.Color('white')
+
+
+# This is a simple class that will help us print to the screen.
+# It has nothing to do with the joysticks, just outputting the
+# information.
+class TextPrint(object):
     def __init__(self):
         self.reset()
         self.font = pygame.font.Font(None, 20)
 
-    def print(self, screen, textString):
+    def tprint(self, screen, textString):
         textBitmap = self.font.render(textString, True, BLACK)
-        screen.blit(textBitmap, [self.x, self.y])
+        screen.blit(textBitmap, (self.x, self.y))
         self.y += self.line_height
-        
+
     def reset(self):
-        self.x = 1250
+        self.x = 10
         self.y = 10
         self.line_height = 15
-        
+
     def indent(self):
         self.x += 10
-        
+
     def unindent(self):
         self.x -= 10
-    
+
 
 pygame.init()
 
-# Ekranın genişliğini ve yüksekliğini ayarlama [genişlik, yükseklik]
-size = [500, 700]
-screen = pygame.display.set_mode(size)
+# Set the width and height of the screen (width, height).
+screen = pygame.display.set_mode((500, 700))
 
-pygame.display.set_caption("Joystik deneme")
+pygame.display.set_caption("My Game")
 
-# Kullanıcı kapat düğmesini tıklayana kadar bekleyin.
+# Loop until the user clicks the close button.
 done = False
 
-# Ekranın ne kadar hızlı güncelleneceğini yönetmek için kullanılır
+# Used to manage how fast the screen updates.
 clock = pygame.time.Clock()
 
-# joystick kollarını başlat
+# Initialize the joysticks.
 pygame.joystick.init()
 
-
-#Kamerayı başlat ve başlat
-#pygame.camera.Camera.start()
-
-
-# Yazdırmaya hazır olun
+# Get ready to print.
 textPrint = TextPrint()
 
-message_list = np.array([[0,1,2,3],[0,1,2,3,4,5,6,7,8,9,10,11]])
-
-print(message_list)
 # -------- Main Program Loop -----------
-while done==False:
-    # ETKİNLİK İŞLEME ADIMI
-    for event in pygame.event.get(): # Kullanıcı bir şey yaptı
-        if event.type == pygame.QUIT: # Kullanıcı kapat'ı tıkladıysa
-            done=True # Yaptığımız işaret, bu döngüden çıkalım
+while not done:
+    #
+    # EVENT PROCESSING STEP
+    #
+    # Possible joystick actions: JOYAXISMOTION, JOYBALLMOTION, JOYBUTTONDOWN,
+    # JOYBUTTONUP, JOYHATMOTION
+    for event in pygame.event.get(): # User did something.
+        if event.type == pygame.QUIT: # If user clicked close.
+            done = True # Flag that we are done so we exit this loop.
+        elif event.type == pygame.JOYBUTTONDOWN:
+            print("Joystick button pressed.")
+        elif event.type == pygame.JOYBUTTONUP:
+            print("Joystick button released.")
 
-        # Olası kumanda kolu eylemleri: JOYAXISMOTION JOYBALLMOTION JOYBUTTONDOWN JOYBUTTONUP JOYHATMOTION
-        if event.type == pygame.JOYBUTTONDOWN:
-            print("Joystick kolu düğmesine basıldı.")
-            #serArduino.write(b"1");
-        if event.type == pygame.JOYBUTTONUP:
-            print("Kumanda kolu düğmesi serbest bırakıldı.")
-            #serArduino.write(b"0");
-
-    # ÇİZİM ADIM
-    # İlk olarak, ekranı beyaza temizleyin. Bunun üzerine başka çizim komutları
-    # koymayın, aksi takdirde bu komutla silinirler.
+    #
+    # DRAWING STEP
+    #
+    # First, clear the screen to white. Don't put other drawing commands
+    # above this, or they will be erased with this command.
     screen.fill(WHITE)
     textPrint.reset()
 
-    # Sayımını al joysticks
+    # Get count of joysticks.
     joystick_count = pygame.joystick.get_count()
 
-
-    textPrint.print(screen, "joysticks kolu sayısı : {}".format(joystick_count) )
+    textPrint.tprint(screen, "Number of joysticks: {}".format(joystick_count))
     textPrint.indent()
-    #pilotInput = [0 for]
+
     # For each joystick:
     for i in range(joystick_count):
         joystick = pygame.joystick.Joystick(i)
         joystick.init()
-    
-        textPrint.print(screen, "Joystick {}".format(i) )
+
+        textPrint.tprint(screen, "Joystick {}".format(i))
         textPrint.indent()
-    
-        # Denetleyici için işletim sisteminden adı alın/joystick
+
+        # Get the name from the OS for the controller/joystick.
         name = joystick.get_name()
-        textPrint.print(screen, "Joystick name: {}".format(name) )
+        textPrint.tprint(screen, "Joystick name: {}".format(name))
 
-        # Genellikle eksen çiftler halinde çalışır, biri için yukarı / aşağı ve diğeri için sola / sağa.
+        # Usually axis run in pairs, up/down for one, and left/right for
+        # the other.
         axes = joystick.get_numaxes()
-        textPrint.print(screen, "Eksen sayısı: {}".format(axes) )
+        textPrint.tprint(screen, "Number of axes: {}".format(axes))
         textPrint.indent()
-        
-        for i in range( axes ):
-            axis = joystick.get_axis( i )
-            message_list[0][i]=axis
-            textPrint.print(screen, "Eksen {} değeri: {:>6.2f}".format(i, axis) )
-        textPrint.unindent()
 
+        for i in range(axes):
+            axis = joystick.get_axis(i)
+            textPrint.tprint(screen, "Axis {} value: {:>6.3f}".format(i, axis))
+        textPrint.unindent()
 
         buttons = joystick.get_numbuttons()
-        textPrint.print(screen, "Düğme sayısı: {}".format(buttons) )
+        textPrint.tprint(screen, "Number of buttons: {}".format(buttons))
         textPrint.indent()
 
-        for i in range( buttons ):
-            button = joystick.get_button( i )
-            message_list[1][i]=button
-            textPrint.print(screen, "Button {:>2} value: {}".format(i,button) )
+        for i in range(buttons):
+            button = joystick.get_button(i)
+            textPrint.tprint(screen,
+                             "Button {:>2} value: {}".format(i, button))
         textPrint.unindent()
 
-        print(message_list)
-
-        # Şapka anahtarı. Yön için ya hep ya hiç, joystick gibi değil.
-        # Değer bir dizide geri gelir.
         hats = joystick.get_numhats()
-        textPrint.print(screen, "Number of hats: {}".format(hats) )
+        textPrint.tprint(screen, "Number of hats: {}".format(hats))
         textPrint.indent()
-        
-        for i in range( hats ):
-            hat = joystick.get_hat( i )
-            textPrint.print(screen, "Hat {} value: {}".format(i, str(hat)) )
-        textPrint.unindent()
-        
+
+        # Hat position. All or nothing for direction, not a float like
+        # get_axis(). Position is a tuple of int values (x, y).
+        for i in range(hats):
+            hat = joystick.get_hat(i)
+            textPrint.tprint(screen, "Hat {} value: {}".format(i, str(hat)))
         textPrint.unindent()
 
-    # BU YORUMUN ÜZERİNDEN ÇİZMEK İÇİN TÜM KOD
+        textPrint.unindent()
 
-    # Devam edin ve ekranı çizdiklerimizle güncelleyin.
+    #
+    # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
+    #
+
+    # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
 
-    # Saniyede 20 kare ile sınırlandır
+    # Limit to 20 frames per second.
     clock.tick(20)
-    
 
-# Pencereyi kapatın ve çıkın.
-# Bu satırı unutursanız, program 'askıda kalacaktır'
-# IDLE'den çalışıyorsa çıkışta.
-pygame.quit ()
+# Close the window and quit.
+# If you forget this line, the program will 'hang'
+# on exit if running from IDLE.
+pygame.quit()

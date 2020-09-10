@@ -6,6 +6,8 @@
       <excludeFolder url="file://$MODULE_DIR$/flutter_websockets/build" />
       <excludeFolder url="file://$MODULE_DIR$/gallipoli_rov/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/gallipoli_rov/build" />
+      <excludeFolder url="file://$MODULE_DIR$/gallipoli_rov_2020/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/gallipoli_rov_2020/build" />
       <excludeFolder url="file://$MODULE_DIR$/gallipoli_rover_controller/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/gallipoli_rover_controller/build" />
       <excludeFolder url="file://$MODULE_DIR$/rov_control/.pub" />

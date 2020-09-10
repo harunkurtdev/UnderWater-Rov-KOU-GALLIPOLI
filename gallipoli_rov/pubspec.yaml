@@ -23,9 +23,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  flutter_screenutil:
   web_socket_channel:
+  flutter_vlc_player:
+  webview_flutter:
+  provider:
   control_pad:
-  provider: 
+  joystick:
 
 dev_dependencies:
   flutter_test:
