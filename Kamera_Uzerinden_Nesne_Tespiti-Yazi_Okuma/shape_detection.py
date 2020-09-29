@@ -64,7 +64,7 @@ def getContours(img):
             cv2.rectangle(imgContour, (x,y), (x+w,y+h), (0,255,0), 2) # Draw a rectange around the shapes
             cv2.putText(imgContour,objectType,(x+(w//2)-10, y+(h//2)-10), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0,0,0),2)
 
-cam=cv2.VideoCapture(1)
+cam=cv2.VideoCapture(0)
 while True:
     ret,img = cam.read()
     imgContour = img.copy()

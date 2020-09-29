@@ -3,9 +3,9 @@ import time
 import json
 def pythonSerial():
     # burada portumuzu okuyoruz...
-    port = serial.Serial("COM5"  # com girilmesi gerekli
-                         , baudrate=115200  # baund rate
-                         , timeout=0.101
+    port = serial.Serial("COM14"  # com girilmesi gerekli
+                         , baudrate=19200  # baund rate
+                         , timeout=0
                          , parity=serial.PARITY_NONE,
                          bytesize=serial.EIGHTBITS,
                          stopbits=serial.STOPBITS_ONE
@@ -16,11 +16,11 @@ def pythonSerial():
     # decode diyerek parçalama işlemi yapıyoruz...
 
     while True:
-        if port.readline():
-            if port.readline()!=b'':
-                jsonSerial=json.loads(port.readline().decode("utf-8"))
-                print(jsonSerial["x_eksen"])
-
+        if port.isOpen():
+            port.write("a".encode("ascii"))
+            b=port.read()
+            if b!=b'':
+                print(b.decode("ascii"))
         port.flush()
 
         if 0xFF==ord("q"):

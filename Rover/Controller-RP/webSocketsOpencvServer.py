@@ -5,6 +5,7 @@ import asyncio
 import websockets
 import cv2
 import numpy as np
+from imutils.video import VideoStream
 
 class WebSocketsOpencvServer:
 
@@ -12,12 +13,15 @@ class WebSocketsOpencvServer:
     "verillerimizi aktararak kablosuz bağlantı sayesinde mobil ve bilgisayar üzerinden rahatlıkla kamera bilgileirine " \
     "erişebilmeyi sağlanmaktayız..."
 
-    def __init__(self, serverHost=None, serverPort=None, clientHost=None, clientPort=None,camId=None):
+    def __init__(self, serverHost=None, serverPort=None, clientHost=None, clientPort=None,camId=None,imutilsCamId=None,camPiState=None):
         "gelen bilgiler atanmakta..."
         self.serverHost = serverHost
         self.serverPort = serverPort
         self.clientHost = clientHost
         self.clientPort = clientPort
+        self.camPiState=camPiState
+        if imutilsCamId!=None:
+            self.cam=VideoStream(usePiCamera=True).start()
         if camId!=None:
             self.cam=cv2.VideoCapture(camId)
 
@@ -71,13 +75,17 @@ class WebSocketsOpencvServer:
     def camRead(self,img=None):
         "camRead fonksiyonun amacı camera kare bilgimize bu fonksiyon sayesinde erişebilmek"
 
-        "camera idsi var ise ve camera açılmış ise if bölümüne gir"
-        if self.cam.isOpened():
-            """Bu bölüm bizim cameramızdan gelen verileri alığ ilettiğimiz kısımdır
-               """
-            ret, frame = self.cam.read()
-            if ret == True:
-                return frame
+        if self.camPiState==True:
+            frame=self.cam.read()
+            return frame
+        else:
+            "camera idsi var ise ve camera açılmış ise if bölümüne gir"
+            if self.cam.isOpened():
+                """Bu bölüm bizim cameramızdan gelen verileri alığ ilettiğimiz kısımdır
+                   """
+                ret, frame = self.cam.read()
+                if ret == True:
+                    return frame
 
     async def roboServer(self, websockets, path):
         """

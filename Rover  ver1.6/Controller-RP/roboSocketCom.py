@@ -5,14 +5,14 @@ import numpy as np
 import serial
 import  time
 from serial_asyncio import create_serial_connection
-
-port = serial.Serial("COM5"  # com girilmesi gerekli
-                         , baudrate=115200  # baund rate
-                         , timeout=0
-                         ,parity=serial.PARITY_NONE,
-                         bytesize=serial.EIGHTBITS,
-                         stopbits=serial.STOPBITS_ONE
-                     )  # zaman aşım
+#
+# port = serial.Serial("COM5"  # com girilmesi gerekli
+#                          , baudrate=115200  # baund rate
+#                          , timeout=0
+#                          ,parity=serial.PARITY_NONE,
+#                          bytesize=serial.EIGHTBITS,
+#                          stopbits=serial.STOPBITS_ONE
+#                      )  # zaman aşım
 
 class RoboSocketCom:
 
@@ -22,10 +22,26 @@ class RoboSocketCom:
         self.serverPort=serverPort
         self.clientHost=clientHost
         self.clientPort=clientPort
+        self.robot_working = None
+        self.direction = None
+        self.frontSpeed = 1500
+        self.backSpeed = 1500
+        self.goLeftSpeed = 1500
+        self.goRightSpeed = 1500
+        self.turnRightSpeed = 1500
+        self.turnLeftSpeed = 1500
+        self.gripper_arm = 1500
+        self.robotHeightSpeed = 1500
+        self.robotHeight = 0
+        self.cam_x_position = 1500
+        self.cam_y_position = 1500
+        self.readJson = ""
 
 
         "socket bağlantılarını başlat"
         self.socketRun()
+    def motorSpeedMap(self,x, in_min, in_max, out_min, out_max):
+        return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
     def socketRun(self):
          
@@ -84,94 +100,101 @@ class RoboSocketCom:
 
         self.message = await websockets.recv()
         "json.loads methodunu kullanmak zorundasın aksi halde hata alırsın"
-        value = json.loads(self.message)
+        # value = json.dumps(self.message)
 
+        print(self.message)
         try:
-            #print("client ten gelen : ",self.message)
-            direction="0"
+            # value = json.loads(self.message)
+            # print(self.message)
+            # value = json.loads(self.message)
+            # print("client ten gelen : ",self.message)
+            # self.direction = "0"
+        #             #
+        #             # if value != None:
+        #             #     if value["goLeftSpeed"] == True:
+        #             #         self.direction = "1"
+        #             #         self.goLeftSpeed = 1600
+        #             #         self.goRightSpeed = 1400
+        #             #
+        #             #     if value["goRightSpeed"] == True:
+        #             #         self.direction = "2"
+        #             #         self.goRightSpeed = 1600
+        #             #         self.goLeftSpeed = 1400
+        #             #
+        #             #     if value["backSpeed"] == True:
+        #             #         self.direction = "4"
+        #             #         self.backSpeed = 1400
+        #             #         # self.frontSpeed = 1400
+        #             #
+        #             #     if value["frontSpeed"] == True:
+        #             #         self.direction = "3"
+        #             #         self.frontSpeed = 1600
+        #             #         # self.backSpeed = 1600
+        #             #         # self.frontSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1100, 1900)
+        #             #
+        #             #     if (0 < float(value["cam_y_axis"]) <= 0.999969482421875):
+        #             #         self.cam_y_position = self.motorSpeedMap(value["cam_y_axis"], 0.0, 0.999969482421875, 1500, 1100)
+        #             #
+        #             #     elif (0 > float(value["cam_y_axis"]) >= -1.0) and value["cam_y_axis"] != -3.0517578125e-05 and value[
+        #             #         "cam_y_axis"] != -0.007843017578125:
+        #             #         self.cam_y_position = self.motorSpeedMap(-value["cam_y_axis"], 0.0, 1.0, 1500, 1900)
+        #             #
+        #             #     if (0 < float(value["cam_x_axis"]) <= 0.999969482421875):
+        #             #         self.cam_x_position = self.motorSpeedMap(value["cam_x_axis"], 0.0, 0.999969482421875, 1500, 1100)
+        #             #
+        #             #     elif (0 > float(value["cam_x_axis"]) >= -1.0) and value["cam_x_axis"] != -3.0517578125e-05 and value[
+        #             #         "cam_x_axis"] != -0.007843017578125:
+        #             #         self.cam_x_position = self.motorSpeedMap(-value["cam_x_axis"], 0.0, 1.0, 1500, 1900)
+        #             #
+        #             #     if value["turnLeftSpeed"] == True:
+        #             #         self.direction = "5"
+        #             #         self.turnLeftSpeed = 1400
+        #             #         self.turnRightSpeed = 1600
+        #             #
+        #             #     if value["turnRightSpeed"] == True:
+        #             #         self.direction = "6"
+        #             #         self.turnRightSpeed = 1400
+        #             #         self.turnLeftSpeed = 1600
+        #             #
+        #             #     if -1001 < self.robotHeight <= 0:
+        #             #         self.robotHeightSpeed = self.motorSpeedMap(self.robotHeight, 0, -1000, 1500, 1100)
+        #             #
+        #             #     if 1001 > self.robotHeight >= 0:
+        #             #         self.robotHeightSpeed = self.motorSpeedMap(self.robotHeight, 0, 1000, 1500, 1900)
+        #             #
+        #             #     if value["robotHeightStop"] == True:
+        #             #         self.robotHeight = 0
+        #             #         self.robotHeightSpeed = 1500
+        #             #
+        #             #     if value["robotHeightPositive"] == True:
+        #             #         self.robotHeight += 3
+        #             #
+        #             #     if value["robotHeightNegative"] == True:
+        #             #         self.robotHeight -= 3
+        #             #
+        #             #     writeJson = {
+        #             #         "direction": self.direction,
+        #             #         "frontSpeed": self.frontSpeed,
+        #             #         "backSpeed": self.backSpeed,
+        #             #         "goLeftSpeed": self.goLeftSpeed,
+        #             #         "goRightSpeed": self.goRightSpeed,
+        #             #         "turnRightSpeed": self.turnRightSpeed,
+        #             #         "turnLeftSpeed": self.turnLeftSpeed,
+        #             #         "robotHeightSpeed": value[""],
+        #             #         "gripper_arm": 1900,
+        #             #         "cam_x_position": 1900,
+        #             #         "cam_y_position": self.cam_y_position,
+        #             #     }
+        #             #     writeJson = json.dumps(writeJson)
+        #             #     print(writeJson)
+        #             # await websockets.send("distanceData")
+                    await websockets.send("distanceData")
 
-            if value!=None:
-                if(float(value["motor_x_axis"])==-1.0):
-                    direction="1"
-                    #direction="front"
-                    # speed= map(-value["motor_x_axis"],0.0,1.0,0,2000)
-                elif(float(value["motor_x_axis"])==0.999969482421875):
-                    direction="2"
-                    #direction="back"
-                    # speed = map(value["motor_x_axis"], 0.0,0.999969482421875,0, 2000)
-
-                if (float(value["motor_y_axis"]) ==0.999969482421875):
-                    direction = "4"
-                    # direction="goright"
-                    # speed = map(value["motor_y_axis"], 0.0, 0.999969482421875, 0, 2000)
-                elif (float(value["motor_y_axis"]) ==-1.0):
-                    direction="3"
-                    #direction="goleft"
-                    # speed = map(-value["motor_y_axis"], 0.0, 1.0, 0, 2000)
-
-                if (int(value["robot_arm_x_positive"])> 0):
-                    direction="5"
-                    #direction="turnright"
-                    # speed = 1000
-
-                if (int(value["robot_arm_x_negative"])> 0):
-                    direction="6"
-                    #direction="turnleft"
-                    # speed = 1000
-
-                if (int(value["robot_arm_z_negative"])> 0):
-                    direction="7"
-                    #direction="turnleft"
-                    # speed = 1000
-
-
-                print(direction)
-
-                # line = await reader.readline()
-                # print(str(line, 'utf-8'))
-                #
-                # # # port.open()
-                if port.isOpen():
-                    try:
-                        print(direction)
-                        port.write(str(direction).encode("utf-8"))
-                        incoming = port.readline().decode("utf-8")
-
-                        print(incoming)
-                    except Exception as e:
-                        print(e)
-                        pass
-                else:
-                    print("opening error")
-                # # port.close()
-
-
-            # try:
-            #
-            #     self.port.write(str(value).encode("utf-8"))
-            #     #print(str(value).encode("utf-8"))
-            #     # array = []
-            #     # for i in range(4):
-            #     #     port_okunan_x = self.port.readline()[:-2].decode("utf-8")  # readline ile veriyi okuyup barçalıyoruz
-            #     #
-            #     #     array.append(port_okunan_x)
-            #     #
-            #     # print("Mpu dan okunan: {}-{}-{}".format(array[0],array[1],array[2]))
-            #
-            #     print(self.port.readlines())
-            # except Exception as exp:
-            #     print("port açılırken sorun oldu ",exp)
-            #print(self.port.read())
-
-            
-            
-            await websockets.send("server dan giden mesaj- roboServerWebSocket")
-            
         except Exception as exp:
             pass
             print("roboServer bölümünde veriler gelirken bir hata oluştu hata kodu : ",exp)
-        finally:
-            print(value)
+        # finally:
+            # print(value)
     async def startRoboServerConnect(self,clientHost=None,clientPort=None,sendMessage=None):
         "Server a diğer araçta ki server a bağlanma durumunu buradan ele alarak yapacağız"
         

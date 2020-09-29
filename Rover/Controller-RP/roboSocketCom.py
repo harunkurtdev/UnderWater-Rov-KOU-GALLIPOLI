@@ -24,15 +24,13 @@ class RoboSocketCom:
         self.serialPort=serialPort
         self.robot_working=None
         self.direction=None
-        self.frontRightSpeed=1100
-        self.frontLeftSpeed=1100
+        self.frontSpeed=1500
         self.backSpeed=1500
         self.goLeftSpeed=1500
         self.goRightSpeed=1500
         self.turnRightSpeed=1500
         self.turnLeftSpeed=1500
-        self.gripper_arm=0
-        self.gripperArmLevel=0
+        self.gripper_arm=1500
         self.robotHeightSpeed=1500
         self.robotHeight=0
         self.cam_x_position=1500
@@ -112,26 +110,26 @@ class RoboSocketCom:
             self.direction="0"
 
             if value!=None:
-                if(0>float(value["motor_x_axis"])>=-1.0) and value["motor_x_axis"] !=-3.0517578125e-05 and value["motor_x_axis"]!=-0.007843017578125:
+                if(0>=float(value["motor_x_axis"])>=-1.0) and value["motor_x_axis"] !=-3.0517578125e-05 and value["motor_x_axis"]!=-0.007843017578125:
                     self.direction="1"
-                    self.frontRightSpeed=self.motorSpeedMap(-value["motor_x_axis"],0.0,1.0,1100,1900)
                     self.goLeftSpeed= self.motorSpeedMap(-value["motor_x_axis"],0.0,1.0,1500,1900)
+                    self.goRightSpeed= self.motorSpeedMap(-value["motor_x_axis"],0.0,1.0,1500,1100)
 
-                elif(0<float(value["motor_x_axis"])<=0.999969482421875):
+                elif(0<=float(value["motor_x_axis"])<=0.999969482421875):
                     self.direction="2"
                     self.goRightSpeed = self.motorSpeedMap(value["motor_x_axis"], 0.0,0.999969482421875,1500, 1900)
-                    self.frontLeftSpeed = self.motorSpeedMap(value["motor_x_axis"], 0.0,0.999969482421875,1100, 1900)
+                    self.goLeftSpeed = self.motorSpeedMap(value["motor_x_axis"], 0.0,0.999969482421875,1500, 1100)
 
-                if (0<float(value["motor_y_axis"]) <=0.999969482421875):
+                if (0<=float(value["motor_y_axis"]) <=0.999969482421875):
                     self.direction="4"
                     self.backSpeed = self.motorSpeedMap(value["motor_y_axis"], 0.0, 0.999969482421875, 1500, 1100)
+                    self.frontSpeed = self.motorSpeedMap(value["motor_y_axis"], 0.0, 0.999969482421875, 1500, 1100)
 
-                elif (0>float(value["motor_y_axis"]) >=-1.0)and value["motor_y_axis"] !=-3.0517578125e-05 and value["motor_y_axis"] !=-0.007843017578125:
+                elif (0>=float(value["motor_y_axis"]) >=-1.0)and value["motor_y_axis"] !=-3.0517578125e-05 and value["motor_y_axis"] !=-0.007843017578125:
                     self.direction="3"
-                    self.frontLeftSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1100, 1900)
-                    self.frontRightSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1100, 1900)
-
+                    self.frontSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1500, 1900)
                     self.backSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1500, 1900)
+                    # self.frontSpeed = self.motorSpeedMap(-value["motor_y_axis"], 0.0, 1.0, 1100, 1900)
 
                 if (0<float(value["cam_y_axis"]) <=0.999969482421875):
                     self.cam_y_position = self.motorSpeedMap(value["cam_y_axis"], 0.0, 0.999969482421875, 1500, 1100)
@@ -140,33 +138,32 @@ class RoboSocketCom:
                     self.cam_y_position= self.motorSpeedMap(-value["cam_y_axis"], 0.0, 1.0, 1500, 1900)
 
                 if (0<float(value["cam_x_axis"]) <=0.999969482421875):
-                    self.cam_x_position = self.motorSpeedMap(value["cam_x_axis"], 0.0, 0.999969482421875, 1000, 0)
+                    self.cam_x_position = self.motorSpeedMap(value["cam_x_axis"], 0.0, 0.999969482421875, 1500, 1100)
 
                 elif (0>float(value["cam_x_axis"]) >=-1.0)and value["cam_x_axis"] !=-3.0517578125e-05 and value["cam_x_axis"]!= -0.007843017578125:
-                    self.cam_x_position= self.motorSpeedMap(-value["cam_x_axis"], 0.0, 1.0, 1000, 2000)
+                    self.cam_x_position= self.motorSpeedMap(-value["cam_x_axis"], 0.0, 1.0, 1500, 1900)
 
                 if (int(value["robot_arm_x_positive"])> 0):
                     self.direction="5"
-                    self.frontRightSpeed=1200
                     self.turnLeftSpeed=1400
+                    self.turnRightSpeed = 1600
 
                 if (int(value["robot_arm_x_negative"])> 0):
                     self.direction="6"
-                    self.frontLeftSpeed=1200
                     self.turnRightSpeed=1400
+                    self.turnLeftSpeed = 1600
 
                 if (int(value["robot_arm_z_negative"])> 0):
-                    if -1001<self.robotHeight<0:
+                    if -1001<self.robotHeight<=0:
                         self.robotHeightSpeed = self.motorSpeedMap(self.robotHeight, 0, -1000, 1500, 1100)
 
                 if (int(value["robot_arm_z_positive"])> 0):
-                    if 1001>self.robotHeight>0:
+                    if 1001>self.robotHeight>=0:
                         self.robotHeightSpeed=self.motorSpeedMap(self.robotHeight,0,1000,1500,1900)
 
                 if (int(value["clock_right_motor"])> 0):
                     self.robotHeight=0
                     self.robotHeightSpeed=1500
-
 
                 if (int(value["clock_left_motor"])> 0):
                     self.cam_y_position = 1500
@@ -179,14 +176,13 @@ class RoboSocketCom:
                     self.robotHeight-=1
 
                 if (int(value["gripper_negative"])> 0):
-                    self.gripper_arm=0
+                    self.gripper_arm=1400
                 if (int(value["gripper_positive"])> 0):
-                    self.gripper_arm=2000
+                    self.gripper_arm=1600
 
                 writeJson={
                     "direction":self.direction,
-                    "frontLeftSpeed":self.frontLeftSpeed,
-                    "frontRightSpeed":self.frontRightSpeed,
+                    "frontSpeed":self.frontSpeed,
                     "backSpeed":self.backSpeed,
                     "goLeftSpeed":self.goLeftSpeed,
                     "goRightSpeed":self.goRightSpeed,
@@ -207,8 +203,8 @@ class RoboSocketCom:
                     # print(json.loads(writeJson))
                     if self.serialPort.isOpen():
                         try:
-                            self.serialPort.flush()
-                            print(writeJson)
+                            # self.serialPort.flush()
+                            # print(writeJson)
                             self.serialPort.write(str(writeJson+"\n").encode("utf-8"))
                             self.readJson = self.serialPort.readline().decode("utf-8")
                             print("--"+self.readJson+"--")
@@ -237,14 +233,13 @@ class RoboSocketCom:
                     self.robot_working=True
 
                 self.direction="0"
-                self.frontLeftSpeed=1100
-                self.frontRightSpeed=1100
+                self.frontSpeed=1500
                 self.backSpeed=1500
                 self.goRightSpeed=1500
                 self.goLeftSpeed=1500
                 self.turnRightSpeed=1500
                 self.turnLeftSpeed=1500
-                self.gripper_arm=0
+                # self.gripper_arm=1500
 
             await websockets.send(self.readJson)
         except Exception as exp:

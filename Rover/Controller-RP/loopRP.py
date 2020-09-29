@@ -27,8 +27,8 @@ port = serial.Serial("COM5"  # com girilmesi gerekli
 
 async def roboRUN(serverHost,roboServerPort,roboOpencvServerPort,roboArmOpencvServerPort,roboDisplayStabilizeServerPort,loop):
     roboControl = RoboSocketCom(serverHost=serverHost, serverPort=roboServerPort,serialPort=port)
-    # roboOpencv = WebSocketsOpencvServer(serverHost=serverHost, serverPort=roboOpencvServerPort, camId=1)
-    # roboArmOpencv = WebSocketsOpencvServer(serverHost=serverHost, serverPort=roboArmOpencvServerPort, camId=0)
+    roboOpencv = WebSocketsOpencvServer(serverHost=serverHost, serverPort=roboOpencvServerPort, camId=1)
+    roboArmOpencv = WebSocketsOpencvServer(serverHost=serverHost, serverPort=roboArmOpencvServerPort, imutilsCamId=Ture,camPiState=True)
     roboDisplayStabilize = DisplayStabilizeServer(serverHost=serverHost, serverPort=roboDisplayStabilizeServerPort,)
 
     t1= loop.create_task(roboControl.socketRun())

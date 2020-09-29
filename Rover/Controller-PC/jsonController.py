@@ -35,6 +35,8 @@ class jsonController:
             "robot_run":0,
             "gripper_negative":0,
             "gripper_positive":0,
+            "xNumHat": 0,
+            "yNumHat": 0
         }
 
     def controlJsonRead(self):
@@ -69,12 +71,15 @@ class jsonController:
             dataAxis=list(self.joystcik.joysctikNumAxes())
             # self.joystcik.pyGame.event.get()
             dataButton=list(self.joystcik.joysctikNumButtons())
+            for hat in self.joystcik.joysctikNumHat():
+                NumHatButton.append(hat)
+            NumHatButton=list(NumHatButton)
 
             try :
                 "hata oluşmaz  ise bu bölümde server a verilerimizi transfer edeceğiz"
                 # asyncio.get_event_loop().run_until_complete(self.roboSocketCom.startRoboServerConnect(sendMessage=self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=0),dataAxis)))
                 # asyncio.get_event_loop().run_until_complete(self.roboSocketCom.startRoboServerConnect(sendMessage=self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=1),dataButton)))
-                return self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=0),dataAxis),self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=1),dataButton)
+                return self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=0),dataAxis),self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=1),dataButton),self.joystcikAxisValueJson(self.joystcikControllerNameSwitch(id=2),NumHatButton)
             except Exception as exp:
                 print("controlJsonWrite içinde startRoboServerConnect ile veri aktalırken bir hata oluştu hata kodu : ",exp)
 
@@ -98,8 +103,13 @@ class jsonController:
                 for index in range(len(value)) :
                     #print(value)
                     if 2>index:
-                        #print(value[index])
-                        pass
+                        if value[index] != 11:
+                            if (key == "xNumHat") and (index == 0):
+                                self.data[key] = value[0]
+                                print(index, value[index])
+                            if (key == "yNumHat") and (index == 1):
+                                self.data[key] = value[1]
+                                print(index, value[index])
                     else :
                        # print(value[2])
                         for i in range(len(value[2])):
@@ -169,6 +179,10 @@ class jsonController:
                 "robot_run",
                 "gripper_negative",
                 "gripper_positive",
+            ],
+            [
+                "xNumHat",
+                "yNumHat"
             ]
         ]
         return switch[id]

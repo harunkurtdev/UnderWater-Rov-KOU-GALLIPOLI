@@ -20,10 +20,11 @@ class ShapeDetection:
         imgBlur=self.imgGaussianBlurF(imgGray)
         imgCanny=self.imgCanny(imgBlur)
 
-        # self.getContours(imgCanny)
+        shape= self.getContours(imgCanny)
 
-        # self.CircleDetection(imgGray)
+        circles=self.CircleDetection(imgGray)
 
+        return shape,circles
 
     def imgGrayF(self,img):
         """
@@ -57,12 +58,11 @@ class ShapeDetection:
         return imgCanny
 
     def CircleDetection(self,imgGray):
-        blured = self.imgMedianBlurF(imgGray)
-        circles = cv2.HoughCircles(blured, cv2.HOUGH_GRADIENT, 1, 40, param1=50, param2=30, minRadius=1,
-                                   maxRadius=50)
+        blured = cv2.blur(imgGray,(3,3))
+        circles = cv2.HoughCircles(blured, cv2.HOUGH_GRADIENT, 1, 40, param1=50, param2=30, minRadius=20,
+                                   maxRadius=70)
 
         if circles is not None:
-            dataImg=[]
             # dairelerin indexlerine göre sayı adetini alırız
             circles = np.round(circles[0, :]).astype("int")
 
@@ -72,13 +72,9 @@ class ShapeDetection:
                 cv2.line(self.imgContour, (dX, dY),
                          (int(self.imgContour.shape[1] / 2), int(self.imgContour.shape[0] / 2)), (0, 255, 0), 1)
 
-                imgCut=self.imgContour[dX-r:dX+r,dY-r:dY+r]
-                dataImg.append(imgCut)
-                try:
-                    cv2.imshow("Resim ",imgCut)
-                except :
-                    pass
+                # cv2.rectangle(self.imgContour,(dX-r,dY+r),(dX+r,dY-r),(255,0,0),3)
 
+                yield dX,dY
     def getContours(self,imgCanny):
         """
         getContours fonksiyonu bizden Canny alarak kenarları tespit edilen resim üzerinden
@@ -129,7 +125,7 @@ class ShapeDetection:
                     cY = int(M["m01"] / M["m00"])
                     cv2.circle(self.imgContour, (cX, cY), 5, (255, 255, 255), -1)
 
-                    return cX,cY
+                    yield cX,cY
 
                 else:
                     objectType = "None"
@@ -145,16 +141,71 @@ class ShapeDetection:
         print("çıktı")
 
 if __name__ == '__main__':
+    print(cv2.__version__)
     cam = cv2.VideoCapture(0)
     shape = ShapeDetection()
     while True:
         ret,img=cam.read()
-        _,imgContour=cam.read()
+        frame=img.copy()
 
-        shape.imgRead(img=img,imgContour=imgContour)
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        # define range of blue color in HSV
+        # lower_blue = np.array([110,50,50])
+        # lower_blue = np.array([0,191,0])#Sualtın da ki nesne
+        lower_blue = np.array([91, 159, 255])  # Sualtında ki Çember
+        # upper_blue = np.array([130,255,255])
+        # upper_blue = np.array([15,255,255])#Sualtında ki nesne
+        upper_blue = np.array([112, 255, 255])  # Sualtında ki Çember
+        # Threshold the HSV image to get only blue colors
+        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        # Bitwise-AND mask and original image
+        # resimGray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+        res = cv2.bitwise_and(frame, frame, mask=mask)
+        # cv.imshow('frame', frame)
+        cv2.imshow('mask', mask)
+        # cv2.imshow('mask', resimGray)
+
+        h,w,_=img.shape
+        h=int(h/2)
+        w=int(w/2)
+        _,imgContour=cam.read()
+        _,img0=cam.read()
+        data=None
+        shapeCircle,Circles=shape.imgRead(img=res,imgContour=imgContour)
+        object=False
+        x,y=None,None
+        for cX,cY in shapeCircle:
+            # print(f"sekil dairenin X ekseni {cX} y ekseni {cY}")
+            for dX,dY in Circles :
+                # print(f"Dairenin X ekseni {dX} y ekseni {dY}")
+                if (abs(cX-dX)<50) and (abs(dY-cY)<50):
+                    # print("daire bulundu")
+                    x=int((cX+dX)/2)
+                    y=int((dX+cY)/2)
+                    data={
+                        "sekilX":cX,
+                        "sekilY":cY,
+                        "daireX":dX,
+                        "daireY":dY
+                    }
+                    object=True
+                    # print(data)
+
+        if object==True:
+            # print(data)
+            if w>x and h>y:
+                print("x ekseninde sola doğru - y ekseninde yukarı doğru çıkıyor")
+            if x>w and h>y:
+                print("x ekseninde sağa doğru dönüyor - y ekseninde yukarı doğru çıkıyor")
+            if w>x and y>h:
+                print("x ekseninde sola doğru dönüyor - y ekseninde aşağı doğru iniyor")
+            if x>w and y>h:
+                print("x ekseninde sağa doğru dönüyor - y ekseninde aşağı doğru iniyor")
+        else:
+            print("tarama ya geçiliyor")
+
         cv2.imshow("Resim", imgContour)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             cam.release()
             cv2.destroyAllWindows()
             break
-

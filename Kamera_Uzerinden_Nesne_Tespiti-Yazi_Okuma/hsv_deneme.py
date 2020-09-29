@@ -1,7 +1,10 @@
 from __future__ import print_function
 import cv2 as cv
 import argparse
-
+from websocket import create_connection
+import numpy as np
+import base64
+import cv2
 max_value = 255
 max_value_H = 360 // 2
 low_H = 0
@@ -80,17 +83,42 @@ cv.createTrackbar(low_S_name, window_detection_name, low_S, max_value, on_low_S_
 cv.createTrackbar(high_S_name, window_detection_name, high_S, max_value, on_high_S_thresh_trackbar)
 cv.createTrackbar(low_V_name, window_detection_name, low_V, max_value, on_low_V_thresh_trackbar)
 cv.createTrackbar(high_V_name, window_detection_name, high_V, max_value, on_high_V_thresh_trackbar)
-while True:
 
-    ret, frame = cap.read()
-    if frame is None:
-        break
-    frame_HSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-    frame_threshold = cv.inRange(frame_HSV, (low_H, low_S, low_V), (high_H, high_S, high_V))
+def connect(url,port):
+    ws = create_connection("ws://"+str(url)+":"+str(port))
+    ws.send("Hello, World")
+    result = ws.recv()
+    ws.close()
+    im_bytes = base64.b64decode(result.decode("utf-8"))
+    im_arr = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+    return img
 
-    cv.imshow(window_capture_name, frame)
-    cv.imshow(window_detection_name, frame_threshold)
+def main():
+    while True:
 
-    key = cv.waitKey(30)
-    if key == ord('q') or key == 27:
-        break
+        # frame = connect(ip, 5001)
+        frame = connect(ip, 5002)
+        # ret, frame = cap.read()
+        # if frame is None:
+        #     break
+
+        height, width = frame.shape[:2]
+        frame = cv2.resize(frame, (2 * width, 2 * height),
+                                            interpolation=cv2.INTER_CUBIC)
+        frame_HSV = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+        frame_threshold = cv.inRange(frame_HSV, (low_H, low_S, low_V), (high_H, high_S, high_V))
+
+        cv.imshow(window_capture_name, frame)
+        cv.imshow(window_detection_name, frame_threshold)
+
+        key = cv.waitKey(30)
+        if key == ord('q') or key == 27:
+            cv.destroyAllWindows()
+
+            break
+
+if __name__ == '__main__':
+    ip = "192.168.1.42"
+    main()
+    pass

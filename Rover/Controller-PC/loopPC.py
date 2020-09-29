@@ -16,7 +16,7 @@ def mainIndex():
 def streamCam():
     """Burada sonsuz bir döngü oluşturarak Streaming bir şekilde resmimizi kaydetip okuma işlemleri ypaıyoruz"""
     while True:
-        ws = create_connection("ws://127.0.0.1:5001")
+        ws = create_connection("ws://"+ip+":5001")
         ws.send("Hello, World")
         result = ws.recv()
         ws.close()
@@ -53,7 +53,7 @@ def video_feed():
 def streamArmCam():
     """Burada sonsuz bir döngü oluşturarak Streaming bir şekilde resmimizi kaydetip okuma işlemleri ypaıyoruz"""
     while True:
-        ws = create_connection("ws://127.0.0.1:5002")
+        ws = create_connection("ws://"+ip+":5003")
         ws.send("Hello, World")
         result = ws.recv()
         ws.close()
@@ -90,7 +90,7 @@ def streamCircles():
     """Burada sonsuz bir döngü oluşturarak Streaming bir şekilde resmimizi kaydetip okuma işlemleri ypaıyoruz"""
 
     while True:
-        ws = create_connection("ws://127.0.0.1:5001")
+        ws = create_connection("ws://"+ip+":5001")
         ws.send("Hello, World")
         result = ws.recv()
         ws.close()
@@ -127,7 +127,7 @@ def displayStabilize():
     """Burada sonsuz bir döngü oluşturarak Streaming bir şekilde resmimizi kaydetip okuma işlemleri ypaıyoruz"""
 
     while True:
-        ws = create_connection("ws://127.0.0.1:5003")
+        ws = create_connection("ws://"+ip+ ":5002")
         ws.send("Hello, World")
         result = ws.recv()
         ws.close()
@@ -165,4 +165,5 @@ async def MainLoop(host="0.0.0.0",port=5002,clientHost="127.0.0.1",clientPort=50
 if __name__ == '__main__':
     loop=asyncio.get_event_loop()
     shape = ShapeDetection()
+    ip="10.0.0.42"
     loop.run_until_complete(MainLoop(host="0.0.0.0",port=5010,loop=loop))

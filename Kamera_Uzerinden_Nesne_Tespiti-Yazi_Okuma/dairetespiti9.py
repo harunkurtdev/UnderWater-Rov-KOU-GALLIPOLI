@@ -14,7 +14,7 @@ while True:
     gray_blur = cv2.blur(gray, (3, 3))
 
     # tüm daireleri yakalamaya çalışırız
-    daireler = cv2.HoughCircles(gray_blur, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=1, maxRadius=40)
+    daireler = cv2.HoughCircles(gray_blur, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=40, minRadius=1, maxRadius=40)
 
     # daireler var ise
     if daireler is not None:

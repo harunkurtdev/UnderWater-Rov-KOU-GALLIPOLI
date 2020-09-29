@@ -22,7 +22,8 @@ class ShapeDetection:
 
         shape= self.getContours(imgCanny)
 
-        circles=self.CircleDetection(imgGray)
+        # circles=self.CircleDetection(imgGray)
+        circles=0,0
 
         return shape,circles
 
@@ -58,9 +59,9 @@ class ShapeDetection:
         return imgCanny
 
     def CircleDetection(self,imgGray):
-        blured = self.imgMedianBlurF(imgGray)
-        circles = cv2.HoughCircles(blured, cv2.HOUGH_GRADIENT, 1, 40, param1=50, param2=30, minRadius=20,
-                                   maxRadius=70)
+        blured = cv2.blur(imgGray,(3,3))
+        circles = cv2.HoughCircles(blured, cv2.HOUGH_GRADIENT, 1, 30, param1=50, param2=30, minRadius=20,
+                                   maxRadius=50)
 
         if circles is not None:
             # dairelerin indexlerine göre sayı adetini alırız
@@ -117,7 +118,7 @@ class ShapeDetection:
                 #         objectType = 'Square'
                 #     else:
                 #         objectType = "Rectangle"
-                if objCorner > 4:
+                if objCorner > 6:
 
                     objectType = 'Circle'
 
@@ -135,6 +136,15 @@ class ShapeDetection:
                 cv2.putText(self.imgContour, objectType, (x + (w // 2) - 10, y + (h // 2) - 10),
                             cv2.FONT_HERSHEY_COMPLEX,
                             0.5, (0, 0, 0), 2)
+    def objectDetection(self,imgRed,frame):
+        (contours, hierarchy) = cv2.findContours(imgRed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        for pic, contour in enumerate(contours):
+            area = cv2.contourArea(contour)
+            if (area > 300):
+                x, y, w, h = cv2.boundingRect(contour)
+                img=cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                cv2.putText(frame, "Red Colour", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255))
+                yield img, x,y
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
@@ -146,6 +156,24 @@ if __name__ == '__main__':
     shape = ShapeDetection()
     while True:
         ret,img=cam.read()
+        frame=img.copy()
+
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        # define range of blue color in HSV
+        # lower_blue = np.array([110,50,50])
+        # lower_blue = np.array([0,191,0])#Sualtın da ki nesne
+        lower_blue = np.array([91, 159, 255])  # Sualtında ki Çember
+        # upper_blue = np.array([130,255,255])
+        # upper_blue = np.array([15,255,255])#Sualtında ki nesne
+        upper_blue = np.array([112, 255, 255])  # Sualtında ki Çember
+        # Threshold the HSV image to get only blue colors
+        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        # Bitwise-AND mask and original image
+        # resimGray = cv2.cvtColor(mask, cv2.COLOR_BGR2GRAY)
+        res = cv2.bitwise_and(frame, frame, mask=mask)
+        # cv.imshow('frame', frame)
+        cv2.imshow('mask', mask)
+        # cv2.imshow('mask', resimGray)
 
         h,w,_=img.shape
         h=int(h/2)
@@ -153,7 +181,7 @@ if __name__ == '__main__':
         _,imgContour=cam.read()
         _,img0=cam.read()
         data=None
-        shapeCircle,Circles=shape.imgRead(img=img,imgContour=imgContour)
+        shapeCircle,Circles=shape.imgRead(img=res,imgContour=imgContour)
         object=False
         x,y=None,None
         for cX,cY in shapeCircle:
@@ -191,4 +219,3 @@ if __name__ == '__main__':
             cam.release()
             cv2.destroyAllWindows()
             break
-

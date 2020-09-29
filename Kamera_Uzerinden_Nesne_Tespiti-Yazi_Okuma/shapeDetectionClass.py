@@ -1,6 +1,11 @@
 import cv2
 import numpy as np
 
+import websockets,asyncio,time,json,cv2,base64
+import numpy as np
+# from shapeDetectionClass import ShapeDetection
+from websocket import create_connection
+
 class ShapeDetection:
 
     def __init__(self):
@@ -49,7 +54,7 @@ class ShapeDetection:
         Resmimiz de kenar veyahut keskin hatlarını bularak göstermemize yarar bir resim
         elde etmemizi sağlar...
         """
-        imgCanny=cv2.Canny(imgBlur,50,50)
+        imgCanny=cv2.Canny(imgBlur,75,200)
         return imgCanny
 
     def getContours(self,imgCanny):
@@ -61,7 +66,8 @@ class ShapeDetection:
         cv2.line(imgContour, (int(imgContour.shape[1] / 2)-50, int(imgContour.shape[0] / 2)), (int(imgContour.shape[1] / 2)+50, int(imgContour.shape[0] / 2)), (0, 255, 0), 1)
         cv2.line(imgContour, (int(imgContour.shape[1] / 2), int(imgContour.shape[0] / 2)-25), (int(imgContour.shape[1] / 2), int(imgContour.shape[0] / 2)+25), (0, 255, 0), 1)
 
-        contours, hierarchy = cv2.findContours(imgCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # contours, hierarchy = cv2.findContours(imgCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        contours, hierarchy = cv2.findContours(imgCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         for cnt in contours:
 
             "contours bize list olarak döndükten sonra contourArea sayesinde pixellerinin yerlerini alıyoruz"
@@ -96,22 +102,22 @@ class ShapeDetection:
                 elif objCorner > 4:
                     objectType = 'Circle'
 
-                    blured = self.imgMedianBlurF(self.imgGray)
-                    circles = cv2.HoughCircles(blured, cv2.HOUGH_GRADIENT, 1, 40, param1=50, param2=30, minRadius=1,
-                                           maxRadius=50)
-
-                    if circles is not None:
-
-                        # dairelerin indexlerine göre sayı adetini alırız
-                        circles = np.round(circles[0, :]).astype("int")
-
-                        for (x, y, r) in circles:
-                            cv2.circle(imgContour, (x, y), r, (0, 0, 255), 4)
-                            cv2.line(imgContour, (x, y), (int(imgContour.shape[1] / 2), int(imgContour.shape[0] / 2)), (0, 255, 0), 1)
-
-                            cX = int(M["m10"] / M["m00"])
-                            cY = int(M["m01"] / M["m00"])
-                            cv2.circle(self.imgContour, (cX, cY), 5, (255, 255, 255), -1)
+                    # blured = self.imgMedianBlurF(self.imgGray)
+                    # circles = cv2.HoughCircles(blured, cv2.HOUGH_GRADIENT, 1, 40, param1=50, param2=30, minRadius=1,
+                    #                        maxRadius=50)
+                    #
+                    # if circles is not None:
+                    #
+                    #     # dairelerin indexlerine göre sayı adetini alırız
+                    #     circles = np.round(circles[0, :]).astype("int")
+                    #
+                    #     for (x, y, r) in circles:
+                    #         cv2.circle(imgContour, (x, y), r, (0, 0, 255), 4)
+                    #         cv2.line(imgContour, (x, y), (int(imgContour.shape[1] / 2), int(imgContour.shape[0] / 2)), (0, 255, 0), 1)
+                    #
+                    #         cX = int(M["m10"] / M["m00"])
+                    #         cY = int(M["m01"] / M["m00"])
+                    #         cv2.circle(self.imgContour, (cX, cY), 5, (255, 255, 255), -1)
 
                 else:
                     objectType = "None"
@@ -125,12 +131,27 @@ class ShapeDetection:
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("çıktı")
 
+def connect(url,port):
+    ws = create_connection("ws://"+str(url)+":"+str(port))
+    ws.send("Hello, World")
+    result = ws.recv()
+    ws.close()
+    im_bytes = base64.b64decode(result.decode("utf-8"))
+    im_arr = np.frombuffer(im_bytes, dtype=np.uint8)  # im_arr is one-dim Numpy array
+    img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+    return img
+
 if __name__ == '__main__':
-    cam = cv2.VideoCapture(0)
+    # cam = cv2.VideoCapture(0)
     shape = ShapeDetection()
+    # img = connect(ip, 5002)
+    ip="192.168.1.42"
     while True:
-        ret,img=cam.read()
-        _,imgContour=cam.read()
+        # ret,img=cam.read()
+        # _,imgContour=cam.read()
+
+        img = connect(ip, 5002)
+        imgContour=img.copy()
 
         shape.imgRead(img=img,imgContour=imgContour)
         cv2.imshow("Resim", imgContour)

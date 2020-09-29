@@ -79,8 +79,8 @@ if __name__ == '__main__':
     while True:
         try:
             # asyncio.get_event_loop().run_until_complete(rovCamSocketsTransfer.startRoboServerConnectCamRead(clientHost="127.0.0.1", clientPort=5001,sendMessage="deneme"))
-            loop.run_until_complete(startDeneme(clientHost="127.0.0.1", clientPort=5001,sendMessage="deneme",loop=loop))
-            # cv2.imshow("Resim 2", rovCamSocketsTransfer.camRead())
+            loop.run_until_complete(startDeneme(clientHost="192.168.1.42", clientPort=5002,sendMessage="deneme",loop=loop))
+            cv2.imshow("Resim 2", rovCamSocketsTransfer.camRead())
 
         except Exception as exp:
             print("rovCamClient bir hata yakalandı : ", exp)

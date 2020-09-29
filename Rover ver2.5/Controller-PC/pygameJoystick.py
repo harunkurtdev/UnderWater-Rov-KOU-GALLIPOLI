@@ -147,9 +147,10 @@ class pyGameJoystick:
             for index in range(self.joysctikNumberHat):
                 "burada joystick sayılarını indexsinden axislarını çekiyoruz..."
                 self.joystick_hat=self.joystick.get_hat(index)
-                print(index,self.joystick_hat)
+                # print(self.joystick_hat)
                 "param 1 index param 2 self.joystick_hat"
-                return index,self.joystick_hat
+                for hat in self.joystick_hat:
+                    yield hat
         else :
             "verilen index boş değil ise..."
             self.joystick_hat=self.joystick.get_hat(index)
@@ -162,4 +163,6 @@ if __name__ == '__main__':
     pygame.init()
     while 1 :
         pystart=pyGameJoystick(pyGame=pygame)
-        pystart.joysctikNumBalls()
+        a=pystart.joysctikNumHat()
+        for i in a:
+            print(i)

@@ -119,7 +119,7 @@ def mainDistance(front,down,right,left):
     dst = cv2.add(img1_bg, img2_fg)
     img1[110:rows+110, 100:cols+100] = dst
 
-    img=opencvDistanceShow(image,i,i,i,i)
+    img=opencvDistanceShow(image,front,down,left,right)
 
     return img
 

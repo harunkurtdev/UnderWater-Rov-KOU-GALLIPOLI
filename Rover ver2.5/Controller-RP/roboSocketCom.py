@@ -198,8 +198,8 @@ class RoboSocketCom:
                     # print(json.loads(writeJson))
                     if self.serialPort.isOpen():
                         try:
-                            self.serialPort.flush()
-                            print(writeJson)
+                            # self.serialPort.flush()
+                            # print(writeJson)
                             self.serialPort.write(str(writeJson+"\n").encode("utf-8"))
                             self.readJson = self.serialPort.readline().decode("utf-8")
                             print("--"+self.readJson+"--")

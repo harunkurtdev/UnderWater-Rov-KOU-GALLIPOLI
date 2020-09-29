@@ -146,10 +146,11 @@ class pyGameJoystick:
         if index==None:
             for index in range(self.joysctikNumberHat):
                 "burada joystick sayılarını indexsinden axislarını çekiyoruz..."
-                self.joystick_hat=self.joystick.get_hat(index)
-                print(index,self.joystick_hat)
+                self.joystick_hat = self.joystick.get_hat(index)
+                # print(self.joystick_hat)
                 "param 1 index param 2 self.joystick_hat"
-                return index,self.joystick_hat
+                for hat in self.joystick_hat:
+                    yield hat
         else :
             "verilen index boş değil ise..."
             self.joystick_hat=self.joystick.get_hat(index)
